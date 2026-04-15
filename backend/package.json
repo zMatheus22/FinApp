@@ -4,7 +4,9 @@
   "description": "Backend FinApp",
   "main": "src/server.js",
   "scripts": {
-    "dev": "node --watch src/server.js"
+    "service:up": "docker-compose -f docker-compose.yml up -d",
+    "service:down": "docker-compose -f docker-compose.yml down",
+    "dev": "npm run service:up && node --env-file=.env.development --watch src/server.js"
   },
   "keywords": [],
   "author": "Matheus Vinicyus Strada",
@@ -12,6 +14,7 @@
   "type": "module",
   "dependencies": {
     "dotenv": "^17.4.2",
-    "fastify": "^5.8.5"
+    "fastify": "^5.8.5",
+    "pg": "^8.20.0"
   }
 }
