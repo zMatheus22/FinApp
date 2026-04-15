@@ -44,5 +44,35 @@ export const buildApp = () => {
       .send({ status: "Error", message: "Erro de conexão com o banco" });
   });
 
+  app.post("/api/v1/users", async (request, reply) => {
+    const { username, email, password } = request.body;
+
+    try {
+      await pool.query(
+        "INSERT INTO users (username, email, password) VALUES ($1, $2, $3)",
+        [username, email, password],
+      );
+      return reply.status(201).send({ message: "Usuário criado com sucesso" });
+    } catch (error) {
+      console.error("Erro ao criar usuário:", error);
+      return reply
+        .status(500)
+        .send({ message: "Erro ao criar usuário", error: error.message });
+    }
+  });
+
+  app.get("/api/v1/users", async (request, reply) => {
+    try {
+      const result = await pool.query("SELECT * FROM users;");
+      const username = result.rows[0].username;
+      const email = result.rows[0].email;
+      return reply.status(200).send({ username: username, email: email });
+    } catch (error) {
+      return reply
+        .status(500)
+        .send({ message: "Erro ao retornar usuário", error: error.message });
+    }
+  });
+
   return app;
 };
