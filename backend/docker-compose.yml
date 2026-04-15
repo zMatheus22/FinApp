@@ -1,0 +1,13 @@
+services:
+  database:
+    container_name: "finappDB-dev"
+    image: "postgres:18.3-alpine3.23"
+    env_file:
+      - ./.env.development
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
