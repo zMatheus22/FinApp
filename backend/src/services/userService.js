@@ -35,7 +35,24 @@ export const getUsersService = async () => {
 };
 
 export const getUserByIdService = async (id) => {
+  if (!id) {
+    throw new ErrorFormat(400, "ID do usuário é obrigatório.");
+  }
+
+  const isUUID =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  if (!isUUID) {
+    throw new ErrorFormat(400, "ID do usuário deve ser um UUID válido.");
+  }
+
   const user = await getUserById(id);
+
+  if (!user) {
+    throw new ErrorFormat(404, "Usuário não encontrado.");
+  }
+
+  delete user.password;
+
   return user;
 };
 
@@ -45,6 +62,11 @@ export const deleteUserService = async (id, pass) => {
   }
   if (!id) {
     throw new ErrorFormat(400, "ID do usuário é obrigatório.");
+  }
+  const isUUID =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  if (!isUUID) {
+    throw new ErrorFormat(400, "ID do usuário deve ser um UUID válido.");
   }
 
   const user = await getUserPasswordById(id);

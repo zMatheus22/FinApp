@@ -35,7 +35,7 @@ describe("CRUD de usuários", () => {
     expect(responseBody.user.email).toBe("matheus@email.com");
     expect(Date.parse(responseBody.user.created_at)).not.toBeNaN();
     expect(responseBody.user.password).not.toBeDefined();
-    expect(responseBody.message).toBe("Usuário criado com sucesso");
+    expect(responseBody.message).toBe("Usuário criado com sucesso.");
   });
 
   it("Deve ser capaz de retornar o usuário que acabou de ser criado", async () => {
@@ -108,7 +108,7 @@ describe("CRUD de usuários", () => {
     expect(responseBody.user[1].created_at).toBeDefined();
     expect(responseBody.user[1].created_at).not.toBeNaN();
     expect(responseBody.user[1].password).not.toBeDefined();
-    expect(responseBody.message).toBe("Usuários retornados com sucesso");
+    expect(responseBody.message).toBe("Usuários retornados com sucesso.");
   });
 
   it("Deve ser capaz de buscar o usuário pelo ID", async () => {
@@ -132,6 +132,7 @@ describe("CRUD de usuários", () => {
       url: `/api/v1/users/${idUser}`,
     });
 
+    expect(resultGetID.statusCode).toBe(200);
     const resultGetIDBody = JSON.parse(resultGetID.payload);
     expect(resultGetIDBody.user.id).toBeDefined();
     expect(resultGetIDBody.user.username).toBe("joao");
@@ -139,7 +140,7 @@ describe("CRUD de usuários", () => {
     expect(resultGetIDBody.user.created_at).toBeDefined();
     expect(resultGetIDBody.user.created_at).not.toBeNaN();
     expect(resultGetIDBody.user.password).not.toBeDefined();
-    expect(resultGetIDBody.message).toBe("Usuário encontrado com sucesso!");
+    expect(resultGetIDBody.message).toBe("Usuário encontrado com sucesso.");
   });
 
   it("Não deve ser capaz de criar um usuário com email já existente", async () => {
@@ -178,9 +179,9 @@ describe("CRUD de usuários", () => {
       url: "/api/v1/users/9999",
     });
 
-    expect(response.statusCode).toBe(500);
+    expect(response.statusCode).toBe(400);
     const responseBody = JSON.parse(response.body);
-    expect(responseBody.message).toBe("Erro ao retornar usuário");
+    expect(responseBody.message).toBe("ID do usuário deve ser um UUID válido.");
   });
 
   it("Não deve ser capaz de criar um usuário sem email", async () => {
@@ -223,8 +224,6 @@ describe("CRUD de usuários", () => {
     });
 
     expect(resultDelete.statusCode).toBe(204);
-    const resultDeleteBody = JSON.parse(resultDelete.payload);
-    expect(resultDeleteBody.message).toBe("Usuário deletado com sucesso!");
 
     const resultGetID = await app.inject({
       method: "GET",
@@ -233,6 +232,6 @@ describe("CRUD de usuários", () => {
 
     expect(resultGetID.statusCode).toBe(404);
     const resultGetIDBody = JSON.parse(resultGetID.payload);
-    expect(resultGetIDBody.message).toBe("Usuário não encontrado!");
+    expect(resultGetIDBody.message).toBe("Usuário não encontrado.");
   });
 });

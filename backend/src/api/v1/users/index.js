@@ -6,12 +6,16 @@ import {
 } from "#src/services/userService.js";
 
 export const createUser = async (request, reply) => {
-  const { username, email, password } = request.body;
-  const user = await createUserService(username, email, password);
-  return reply.status(201).send({
-    message: "Usuário criado com sucesso",
-    user: user,
-  });
+  try {
+    const { username, email, password } = request.body;
+    const user = await createUserService(username, email, password);
+    return reply.status(201).send({
+      message: "Usuário criado com sucesso.",
+      user: user,
+    });
+  } catch (error) {
+    return reply.status(error.statusCode).send({ message: error.message });
+  }
 };
 
 export const getUsers = async (request, reply) => {
@@ -28,15 +32,13 @@ export const getUsers = async (request, reply) => {
     const usersLength = usersResult.length;
 
     const body = {
-      message: "Usuários retornados com sucesso",
+      message: "Usuários retornados com sucesso.",
       quantity: usersLength,
       user: users,
     };
     return reply.status(200).send(body);
   } catch (error) {
-    return reply
-      .status(500)
-      .send({ message: "Erro ao retornar usuários", error: error.message });
+    return reply.status(error.statusCode).send({ message: error.message });
   }
 };
 
@@ -47,7 +49,7 @@ export const getUserById = async (request, reply) => {
     const user = await getUserByIdService(id);
 
     const body = {
-      message: "Usuário encontrado com sucesso!",
+      message: "Usuário encontrado com sucesso.",
       user: {
         id: user.id,
         username: user.username,
@@ -58,9 +60,7 @@ export const getUserById = async (request, reply) => {
 
     return reply.status(200).send(body);
   } catch (error) {
-    return reply
-      .status(500)
-      .send({ message: "Erro ao retornar usuário", error: error.message });
+    return reply.status(error.statusCode).send({ message: error.message });
   }
 };
 
@@ -72,7 +72,7 @@ export const deleteUser = async (request, reply) => {
     await deleteUserService(id, password);
 
     const body = {
-      message: "Usuário deletado com sucesso!",
+      message: "Usuário deletado com sucesso.",
     };
 
     return reply.status(204).send(body);
