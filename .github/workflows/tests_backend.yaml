@@ -7,9 +7,6 @@ jobs:
     name: Jest
     runs-on: ubuntu-latest
     steps:
-      - name: Acess backend directory
-        run: cd backend
-
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -20,6 +17,8 @@ jobs:
 
       - name: Install dependencies, using npm ci
         run: npm ci
+        working-directory: backend
 
       - name: Run tests
         run: npm run test
+        working-directory: backend
