@@ -1,22 +1,18 @@
-import { pool } from "#src/database/index.js";
+import {
+  createUserService,
+  getUsersService,
+  getUserByIdService,
+} from "#src/services/userService.js";
 
 export const createUser = async (request, reply) => {
   const { username, email, password } = request.body;
 
   try {
-    const result = await pool.query(
-      "INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *;",
-      [username, email, password],
-    );
+    const user = await createUserService(username, email, password);
 
     return reply.status(201).send({
       message: "Usuário criado com sucesso",
-      user: {
-        id: result.rows[0].id,
-        username: result.rows[0].username,
-        email: result.rows[0].email,
-        created_at: result.rows[0].created_at,
-      },
+      user: user,
     });
   } catch (error) {
     console.error("Erro ao criar usuário:", error);
@@ -28,15 +24,16 @@ export const createUser = async (request, reply) => {
 
 export const getUsers = async (request, reply) => {
   try {
-    const result = await pool.query("SELECT * FROM users;");
+    const usersResult = await getUsersService();
 
-    const users = result.rows.map((user) => ({
+    const users = usersResult.map((user) => ({
       id: user.id,
       username: user.username,
       email: user.email,
       created_at: user.created_at,
     }));
-    const usersLength = result.rows.length;
+
+    const usersLength = usersResult.length;
 
     const body = {
       message: "Usuários retornados com sucesso",
@@ -48,5 +45,29 @@ export const getUsers = async (request, reply) => {
     return reply
       .status(500)
       .send({ message: "Erro ao retornar usuários", error: error.message });
+  }
+};
+
+export const getUserById = async (request, reply) => {
+  try {
+    const { id } = request.params;
+
+    const user = await getUserByIdService(id);
+
+    const body = {
+      message: "Usuário encontrado com sucesso!",
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        created_at: user.created_at,
+      },
+    };
+
+    return reply.status(200).send(body);
+  } catch (error) {
+    return reply
+      .status(500)
+      .send({ message: "Erro ao retornar usuário", error: error.message });
   }
 };
