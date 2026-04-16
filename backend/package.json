@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Backend FinApp",
   "main": "src/server.js",
+  "imports": {
+    "#src/*": "./src/*"
+  },
   "scripts": {
     "service:up": "docker-compose -f docker-compose.yml up -d",
     "service:down": "docker-compose -f docker-compose.yml down",
@@ -16,6 +19,7 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.4.2",
     "fastify": "^5.8.5",
     "node-pg-migrate": "^8.0.4",

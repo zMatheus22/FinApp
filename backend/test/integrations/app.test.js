@@ -1,14 +1,9 @@
-import { buildApp } from "../../src/app.js";
-import { pool } from "../../src/database/index.js";
+import { buildApp } from "#src/app/index.js";
 
 describe("Integration tests for the backend application", () => {
   let app;
   beforeAll(() => {
     app = buildApp();
-  });
-
-  afterAll(async () => {
-    await pool.end();
   });
 
   it("Deve acessar o endpoint de status e retornar as informações do banco de dados", async () => {
