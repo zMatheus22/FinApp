@@ -2,24 +2,16 @@ import {
   createUserService,
   getUsersService,
   getUserByIdService,
+  deleteUserService,
 } from "#src/services/userService.js";
 
 export const createUser = async (request, reply) => {
   const { username, email, password } = request.body;
-
-  try {
-    const user = await createUserService(username, email, password);
-
-    return reply.status(201).send({
-      message: "Usuário criado com sucesso",
-      user: user,
-    });
-  } catch (error) {
-    console.error("Erro ao criar usuário:", error);
-    return reply
-      .status(500)
-      .send({ message: "Erro ao criar usuário", error: error.message });
-  }
+  const user = await createUserService(username, email, password);
+  return reply.status(201).send({
+    message: "Usuário criado com sucesso",
+    user: user,
+  });
 };
 
 export const getUsers = async (request, reply) => {
@@ -69,5 +61,25 @@ export const getUserById = async (request, reply) => {
     return reply
       .status(500)
       .send({ message: "Erro ao retornar usuário", error: error.message });
+  }
+};
+
+export const deleteUser = async (request, reply) => {
+  try {
+    const { id } = request.params;
+    const { password } = request.body;
+
+    await deleteUserService(id, password);
+
+    const body = {
+      message: "Usuário deletado com sucesso!",
+    };
+
+    return reply.status(204).send(body);
+  } catch (error) {
+    return reply.status(500).send({
+      message: "Erro ao tentar deletar usuário",
+      error: error.message,
+    });
   }
 };

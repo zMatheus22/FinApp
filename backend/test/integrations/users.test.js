@@ -141,4 +141,98 @@ describe("CRUD de usuários", () => {
     expect(resultGetIDBody.user.password).not.toBeDefined();
     expect(resultGetIDBody.message).toBe("Usuário encontrado com sucesso!");
   });
+
+  it("Não deve ser capaz de criar um usuário com email já existente", async () => {
+    const user1 = {
+      username: "Ana",
+      email: "ana@email.com",
+      password: "123456",
+    };
+
+    const user2 = {
+      username: "Carlos",
+      email: "ana@email.com",
+      password: "SENha13",
+    };
+
+    await app.inject({
+      method: "POST",
+      url: "/api/v1/users",
+      payload: user1,
+    });
+
+    const response = await app.inject({
+      method: "POST",
+      url: "/api/v1/users",
+      payload: user2,
+    });
+
+    expect(response.statusCode).toBe(409);
+    const responseBody = JSON.parse(response.body);
+    expect(responseBody.message).toBe("Este e-mail já está em uso.");
+  });
+
+  it("Não deve ser capaz de buscar um usuário com ID inexistente", async () => {
+    const response = await app.inject({
+      method: "GET",
+      url: "/api/v1/users/9999",
+    });
+
+    expect(response.statusCode).toBe(500);
+    const responseBody = JSON.parse(response.body);
+    expect(responseBody.message).toBe("Erro ao retornar usuário");
+  });
+
+  it("Não deve ser capaz de criar um usuário sem email", async () => {
+    const response = await app.inject({
+      method: "POST",
+      url: "/api/v1/users",
+      payload: {
+        username: "joao",
+        password: "123456",
+      },
+    });
+
+    expect(response.statusCode).toBe(400);
+    const responseBody = JSON.parse(response.body);
+    expect(responseBody.message).toBe("Todos os campos são obrigatórios.");
+  });
+
+  it("Deve ser capaz de deletar o usuário pelo ID", async () => {
+    const response = await app.inject({
+      method: "POST",
+      url: "/api/v1/users",
+      payload: {
+        username: "joao",
+        email: "joao@email.com",
+        password: "123456",
+      },
+    });
+
+    expect(response.statusCode).toBe(201);
+    const responseBody = JSON.parse(response.payload);
+    expect(responseBody.user.id).toBeDefined();
+    const idUser = responseBody.user.id;
+
+    const resultDelete = await app.inject({
+      method: "DELETE",
+      url: `/api/v1/users/${idUser}`,
+      payload: {
+        password: "123456",
+      },
+    });
+
+    expect(resultDelete.statusCode).toBe(204);
+    const resultDeleteBody = JSON.parse(resultDelete.payload);
+    expect(resultDeleteBody.message).toBe("Usuário deletado com sucesso!");
+
+    const resultGetID = await app.inject({
+      method: "GET",
+      url: `/api/v1/users/${idUser}`,
+    });
+
+    expect(resultGetID.statusCode).toBe(404);
+    const resultGetIDBody = JSON.parse(resultGetID.payload);
+    expect(resultGetIDBody.message).toBe("Usuário não encontrado!");
+  });
 });

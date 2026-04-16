@@ -2,10 +2,24 @@ import {
   createUserDB,
   getUsersDB,
   getUserById,
+  findUserByEmail,
+  deleteUserDB,
+  getUserPasswordById,
 } from "#src/models/userModel.js";
 import bcrypt from "bcrypt";
+import { ErrorFormat } from "#src/services/erro.js";
 
 export const createUserService = async (username, email, password) => {
+  const existingUsers = await findUserByEmail(email);
+  const emailExists = existingUsers && existingUsers.email === email;
+  if (emailExists) {
+    throw new ErrorFormat(409, "Este e-mail já está em uso.");
+  }
+
+  if (!username || !email || !password) {
+    throw new ErrorFormat(400, "Todos os campos são obrigatórios.");
+  }
+
   const passwordHash = await bcrypt.hash(password, 10);
   const user = await createUserDB(username, email, passwordHash);
 
@@ -23,4 +37,27 @@ export const getUsersService = async () => {
 export const getUserByIdService = async (id) => {
   const user = await getUserById(id);
   return user;
+};
+
+export const deleteUserService = async (id, pass) => {
+  if (!pass) {
+    throw new ErrorFormat(400, "Deve ser informada a senha do usuário.");
+  }
+  if (!id) {
+    throw new ErrorFormat(400, "ID do usuário é obrigatório.");
+  }
+
+  const user = await getUserPasswordById(id);
+  if (!user) {
+    throw new ErrorFormat(404, "Dados do usuário não encontrados.");
+  }
+
+  const isPasswordValid = await bcrypt.compare(pass, user.password);
+  delete user.password;
+
+  if (!isPasswordValid) {
+    throw new ErrorFormat(401, "Senha incorreta.");
+  }
+
+  await deleteUserDB(id);
 };
