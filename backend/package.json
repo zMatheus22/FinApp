@@ -10,7 +10,7 @@
     "service:up": "docker-compose -f docker-compose.yml up -d",
     "service:down": "docker-compose -f docker-compose.yml down",
     "migrate:create": "node-pg-migrate create",
-    "migrate:up": "node --env-file=.env.development node_modules/node-pg-migrate/bin/node-pg-migrate up",
+    "migrate:up": "npm run service:up && node --env-file=.env.development node_modules/node-pg-migrate/bin/node-pg-migrate up",
     "test": "node --experimental-vm-modules --env-file=.env.development node_modules/jest/bin/jest.js --watchAll",
     "dev": "npm run service:up && node --env-file=.env.development --watch src/server.js"
   },
