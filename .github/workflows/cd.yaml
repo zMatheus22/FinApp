@@ -40,6 +40,7 @@ jobs:
 
       - name: Deploy to server
         run: |
+          unzip backend.zip
           rm -rf ~/finapp-backend
           mkdir ~/finapp-backend
           mv backend/* ~/finapp-backend/
