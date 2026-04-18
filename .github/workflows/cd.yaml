@@ -65,5 +65,5 @@ jobs:
         with:
           context: ./backend # Diz que os arquivos do build estão na pasta backend
           file: ./backend/Dockerfile # O caminho exato do seu Dockerfile
-          push: false # Por enquanto é false, pois ainda não configuramos onde salvar
+          push: true
           tags: finapp-backend:latest
