@@ -19,5 +19,8 @@ jobs:
           name: backend
           path: |
             backend/src
+            backend/scripts
+            backend/migrations
+            backend/.env.development
             backend/package.json
             backend/package-lock.json
