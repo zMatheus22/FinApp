@@ -22,6 +22,7 @@ jobs:
             backend/database-connector
             backend/migrations
             backend/.env.development
+            backend/docker-compose.yml
             backend/package.json
             backend/package-lock.json
 
