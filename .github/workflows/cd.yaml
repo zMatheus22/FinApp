@@ -33,16 +33,16 @@ jobs:
       - name: Download backend artifact
         uses: actions/download-artifact@v4
         with:
-          name: backend.zip
+          name: backend
 
       - name: Display backend files
-        run: ls -R backend.zip
+        run: ls -R
 
       - name: Deploy to server
         run: |
           rm -rf ~/finapp-backend
           mkdir ~/finapp-backend
-          mv backend.zip/* ~/finapp-backend/
+          mv backend/* ~/finapp-backend/
           cd ~/finapp-backend
           npm ci
           npm run start
