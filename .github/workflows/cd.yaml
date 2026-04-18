@@ -40,12 +40,3 @@ jobs:
 
       - name: Display backend files
         run: ls -R
-
-      - name: Deploy to server
-      # CD passou
-      #  run: |
-      #   rm -rf ~/finapp-backend
-      #    mkdir -p ~/finapp-backend
-      #    cp -R backend/. ~/finapp-backend/
-      #    cd ~/finapp-backend
-      #    npm ci
