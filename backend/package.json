@@ -22,7 +22,7 @@
     "producao": "echo ======== PRODUÇÃO / DOCKER (Roda no Container) ========",
     "start": "npm run producao && npm run migrate:up && node src/server.js",
     "teste:docker": "echo ======== TESTE DA IMAGEM DOCKER COMPLETA ========",
-    "docker:up": "npm run teste:docker && docker compose -f docker-compose.yml up -d --build && npm run migrate:up ",
+    "docker:up": "npm run teste:docker && docker compose -f docker-compose.yml up -d --build && npm run migrate:up && echo container rodando!, acesse http://localhost:3333",
     "docker:down": "npm run teste:docker && docker compose -f docker-compose.yml down"
   },
   "keywords": [],
