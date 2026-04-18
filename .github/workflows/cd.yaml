@@ -66,4 +66,4 @@ jobs:
           context: ./backend # Diz que os arquivos do build estão na pasta backend
           file: ./backend/Dockerfile # O caminho exato do seu Dockerfile
           push: true
-          tags: finapp-backend:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/finapp-backend:latest
