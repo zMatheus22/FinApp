@@ -34,10 +34,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: backend
+
       - name: Display backend files
         run: ls -R backend
+
       - name: Deploy to server
-        script: |
+        run: |
           rm -rf ~/finapp-backend
           mkdir ~/finapp-backend
           mv backend/* ~/finapp-backend/
