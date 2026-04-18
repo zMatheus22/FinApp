@@ -1,0 +1,23 @@
+name: Continuous Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  delivery:
+    name: Delivery
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Zip backend
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend
+          path: |
+            backend/src
+            backend/package.json
+            backend/package-lock.json
