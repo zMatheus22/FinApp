@@ -14,7 +14,8 @@
     "migrate:up": "npm run service:up && npm run service:wait && node --env-file=.env.development node_modules/node-pg-migrate/bin/node-pg-migrate up",
     "test:watch": "npm run service:up && npm run service:wait && node --experimental-vm-modules --env-file=.env.development node_modules/jest/bin/jest.js --watchAll",
     "test:ci": "npm run migrate:up && node --experimental-vm-modules --env-file=.env.development node_modules/jest/bin/jest.js",
-    "dev": "npm run service:up && npm run service:wait && node --env-file=.env.development --watch src/server.js"
+    "start": "npm run migrate:up && node --env-file=.env.development src/server.js",
+    "dev": "npm run migrate:up && node --env-file=.env.development --watch src/server.js"
   },
   "keywords": [],
   "author": "Matheus Vinicyus Strada",
