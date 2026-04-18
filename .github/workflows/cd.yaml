@@ -24,3 +24,23 @@ jobs:
             backend/.env.development
             backend/package.json
             backend/package-lock.json
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: delivery
+    steps:
+      - name: Download backend artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: backend
+      - name: Display backend files
+        run: ls -R backend
+      - name: Deploy to server
+        script: |
+          rm -rf ~/finapp-backend
+          mkdir ~/finapp-backend
+          mv backend/* ~/finapp-backend/
+          cd ~/finapp-backend
+          npm ci
+          npm run start
