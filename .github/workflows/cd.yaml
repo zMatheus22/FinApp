@@ -19,7 +19,7 @@ jobs:
           name: backend
           path: |
             backend/src
-            backend/scripts
+            backend/database-connector
             backend/migrations
             backend/.env.development
             backend/package.json
