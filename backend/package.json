@@ -8,12 +8,14 @@
   },
   "scripts": {
     "infra:local": "echo ======== INFRA LOCAL ========",
-    "service:up": "npm run infra:local && docker compose -f docker-compose.yml up -d database",
-    "service:down": "npm run infra:local && docker compose -f docker-compose.yml down",
+    "service:up:database": "npm run infra:local && docker compose --env-file .env.development -f docker-compose.yml up -d database",
+    "service:up:backend": "npm run infra:local && docker compose --env-file .env.development -f docker-compose.yml up -d backend",
+    "service:up": "npm run service:up:database && npm run service:up:backend",
+    "service:down": "npm run infra:local && docker compose --env-file .env.development -f docker-compose.yml down",
     "service:wait": "npm run infra:local && node --env-file=.env.development database-connector/wait-for-db.js",
     "banco:dados": "echo ======== BANCO DE DADOS ========",
     "migrate:create": "npm run banco:dados && node-pg-migrate create",
-    "migrate:up": "npm run banco:dados && npm run service:up && npm run service:wait && node --env-file=.env.development node_modules/node-pg-migrate/bin/node-pg-migrate up",
+    "migrate:up": "npm run banco:dados && npm run service:up:database && npm run service:wait && node --env-file=.env.development node_modules/node-pg-migrate/bin/node-pg-migrate up",
     "testes": "echo ======== TESTES ========",
     "test:watch": "npm run testes && npm run migrate:up && node --experimental-vm-modules --env-file=.env.development node_modules/jest/bin/jest.js --watchAll",
     "test:ci": "npm run testes && npm run migrate:up && node --experimental-vm-modules --env-file=.env.development node_modules/jest/bin/jest.js",
@@ -22,8 +24,8 @@
     "producao": "echo ======== PRODUÇÃO / DOCKER (Roda no Container) ========",
     "start": "npm run producao && npm run migrate:up && node src/server.js",
     "teste:docker": "echo ======== TESTE DA IMAGEM DOCKER COMPLETA ========",
-    "docker:up": "npm run teste:docker && docker compose -f docker-compose.yml up -d --build && npm run migrate:up && echo container rodando!, acesse http://localhost:3333",
-    "docker:down": "npm run teste:docker && docker compose -f docker-compose.yml down"
+    "docker:up": "npm run teste:docker && docker compose --env-file .env.development -f docker-compose.yml up -d --build && npm run migrate:up && echo container rodando!, acesse http://localhost:3333",
+    "docker:down": "npm run teste:docker && docker compose --env-file .env.development -f docker-compose.yml down"
   },
   "keywords": [],
   "author": "Matheus Vinicyus Strada",

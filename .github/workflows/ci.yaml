@@ -1,4 +1,4 @@
-name: Testes Atutomáticos Backend
+name: Continuous Integration
 
 on: pull_request
 
@@ -22,3 +22,18 @@ jobs:
       - name: Run tests
         run: npm run test:ci
         working-directory: backend
+
+  discord:
+    name: Discord
+    runs-on: ubuntu-latest
+    needs: jest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Discord Notification
+        uses: Sniddl/discord-commits@v1.6
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          template: "avatar-with-link"
+          include-extras: true
