@@ -1,4 +1,4 @@
-name: Testes Atutomáticos Backend
+name: Continuous Integration
 
 on: pull_request
 
@@ -22,7 +22,7 @@ jobs:
       - name: Run tests
         run: npm run test:ci
         working-directory: backend
-        
+
   discord:
     name: Discord
     runs-on: ubuntu-latest
