@@ -1,7 +1,7 @@
 import pg from "pg";
 
 const { Client } = pg;
-const MAX_RETRIES = 30;
+const MAX_RETRIES = 120;
 let retries = 0;
 
 console.log(`⏳ Aguardando o PostgreSQL inicializar completamente...`);
